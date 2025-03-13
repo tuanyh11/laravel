@@ -68,11 +68,14 @@ const Header = () => {
     }, []);
 
     return (
-        <header className="bg-white text-black/80 shadow-md">
+        <header className="sticky top-0 z-10 bg-gradient-to-r from-blue-500 to-pink-500 shadow-md">
             {/* Desktop Header */}
             <div className="flex items-center justify-between p-4 md:px-6">
                 <div className="flex items-center space-x-4">
-                    <Link href="/" className="text-xl font-bold md:text-2xl">
+                    <Link
+                        href="/"
+                        className="text-xl font-bold text-white md:text-2xl"
+                    >
                         Wattpad
                     </Link>
                 </div>
@@ -80,12 +83,12 @@ const Header = () => {
                 <div className="flex items-center space-x-2 md:space-x-4">
                     {/* Search bar - hidden on mobile unless expanded */}
                     <div
-                        className={`${isSearchOpen ? 'absolute left-0 right-0 top-0 z-50 flex bg-white p-2' : 'hidden'} md:relative md:flex md:bg-transparent`}
+                        className={`${isSearchOpen ? 'absolute left-0 right-0 top-0 z-50 flex bg-gradient-to-r from-blue-500 to-pink-500 p-2' : 'hidden'} md:relative md:flex md:bg-transparent`}
                     >
                         <input
                             type="text"
-                            placeholder="Search stories, authors"
-                            className="w-full rounded-full py-2 pl-10 pr-4 md:w-64"
+                            placeholder="Tìm kiếm truyện, tác giả..."
+                            className="w-full rounded-full border border-pink-200 bg-white/90 py-2 pl-10 pr-4 focus:border-pink-400 focus:outline-none focus:ring-1 focus:ring-pink-400 md:w-64"
                         />
                         <button className="absolute left-3 top-3 text-gray-500 md:left-5">
                             <FaSearch />
@@ -93,7 +96,7 @@ const Header = () => {
                         {isSearchOpen && (
                             <button
                                 onClick={() => setIsSearchOpen(false)}
-                                className="ml-2 p-2 md:hidden"
+                                className="ml-2 p-2 text-white md:hidden"
                             >
                                 <X className="h-5 w-5" />
                             </button>
@@ -103,14 +106,10 @@ const Header = () => {
                     {/* Search icon for mobile */}
                     <button
                         onClick={() => setIsSearchOpen(true)}
-                        className="text-gray-700 md:hidden"
+                        className="text-white hover:text-blue-100 md:hidden"
                     >
                         <FaSearch className="h-5 w-5" />
                     </button>
-
-                    {/* <button className="hidden rounded-full bg-white px-4 py-2 md:block">
-                        Write
-                    </button> */}
 
                     {user ? (
                         <>
@@ -125,9 +124,9 @@ const Header = () => {
                                             !isWalletDropdownOpen,
                                         )
                                     }
-                                    className="flex items-center space-x-1 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50"
+                                    className="flex items-center space-x-1 rounded-full border border-pink-200 bg-white/90 px-3 py-1.5 text-sm transition-colors hover:bg-white"
                                 >
-                                    <HandCoins className="h-4 w-4 text-green-600" />
+                                    <HandCoins className="h-4 w-4 text-pink-500" />
                                     <span className="font-medium">
                                         {wallet?.balance || '0.00'}{' '}
                                         {wallet.currency}
@@ -139,27 +138,27 @@ const Header = () => {
                                         <div className="p-3">
                                             <div className="mb-2 text-center">
                                                 <p className="text-sm text-gray-600">
-                                                    Your Balance
+                                                    Số dư của bạn
                                                 </p>
-                                                <p className="text-xl font-bold text-green-600">
+                                                <p className="text-xl font-bold text-pink-600">
                                                     {wallet?.balance || '0'}{' '}
                                                     {wallet.currency}
                                                 </p>
                                             </div>
                                             <Link
                                                 href={route('wallet.add-funds')}
-                                                className="flex w-full items-center justify-center rounded-md bg-green-600 py-2 text-sm font-medium text-white hover:bg-green-700"
+                                                className="flex w-full items-center justify-center rounded-md bg-gradient-to-r from-blue-500 to-pink-500 py-2 text-sm font-medium text-white transition-colors hover:from-blue-600 hover:to-pink-600"
                                             >
                                                 <PlusCircle className="mr-2 h-4 w-4" />{' '}
-                                                Add Funds
+                                                Nạp tiền
                                             </Link>
                                             <div className="mt-2">
                                                 <Link
                                                     href={route('wallet.index')}
-                                                    className="flex w-full items-center justify-center rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                                    className="flex w-full items-center justify-center rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
                                                 >
                                                     <Wallet className="mr-2 h-4 w-4" />{' '}
-                                                    Manage Wallet
+                                                    Quản lý ví
                                                 </Link>
                                             </div>
                                         </div>
@@ -168,7 +167,7 @@ const Header = () => {
                             </div>
 
                             {/* Notifications - Show on tablet/desktop */}
-                            <button className="hidden text-gray-700 hover:text-green-600 sm:block">
+                            <button className="hidden text-white transition-colors hover:text-blue-100 sm:block">
                                 <Bell className="h-6 w-6" />
                             </button>
 
@@ -188,73 +187,73 @@ const Header = () => {
                                         <div className="py-1">
                                             <Link
                                                 href={`/profile`}
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
                                             >
                                                 <User className="mr-3 h-5 w-5" />{' '}
-                                                My Profile
+                                                Hồ sơ của tôi
                                             </Link>
                                             <a
                                                 href="#"
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
                                             >
                                                 <Inbox className="mr-3 h-5 w-5" />{' '}
-                                                Inbox
+                                                Tin nhắn
                                             </a>
                                             <a
                                                 href="#"
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-pink-600"
                                             >
                                                 <Bell className="mr-3 h-5 w-5" />{' '}
-                                                Notifications
+                                                Thông báo
                                             </a>
                                             <a
                                                 href="#"
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
                                             >
                                                 <BookOpen className="mr-3 h-5 w-5" />{' '}
-                                                Library
+                                                Thư viện
                                             </a>
 
                                             {/* Show wallet in dropdown on mobile */}
                                             <Link
                                                 href={route('wallet.index')}
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 sm:hidden"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-pink-600 sm:hidden"
                                             >
                                                 <Wallet className="mr-3 h-5 w-5" />{' '}
-                                                My Wallet
+                                                Ví của tôi
                                             </Link>
 
                                             <div className="my-1 border-t"></div>
                                             <a
                                                 href="#"
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
                                             >
                                                 <Globe className="mr-3 h-5 w-5" />{' '}
-                                                Language: English
+                                                Ngôn ngữ: Tiếng Việt
                                             </a>
                                             <a
                                                 href="#"
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
                                             >
                                                 <HelpCircle className="mr-3 h-5 w-5" />{' '}
-                                                Help
+                                                Trợ giúp
                                             </a>
                                             <a
                                                 href="#"
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
                                             >
                                                 <Settings className="mr-3 h-5 w-5" />{' '}
-                                                Settings
+                                                Cài đặt
                                             </a>
                                             <div className="my-1 border-t"></div>
                                             <button
                                                 onClick={() =>
                                                     router.post(route('logout'))
                                                 }
-                                                className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100"
+                                                className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
                                             >
                                                 <LogOut className="mr-3 h-5 w-5" />{' '}
-                                                Log Out
+                                                Đăng xuất
                                             </button>
                                         </div>
                                     </div>
@@ -263,7 +262,7 @@ const Header = () => {
 
                             {/* Mobile menu button */}
                             <button
-                                className="ml-2 md:hidden"
+                                className="ml-2 text-white md:hidden"
                                 onClick={() =>
                                     setIsMobileMenuOpen(!isMobileMenuOpen)
                                 }
@@ -275,17 +274,20 @@ const Header = () => {
                         <>
                             <Link
                                 href="/login"
-                                className="rounded-full bg-white px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base"
+                                className="rounded-full border border-white bg-transparent px-3 py-1.5 text-sm text-white transition-colors hover:bg-white hover:text-blue-600 md:px-4 md:py-2 md:text-base"
                             >
-                                Login
+                                Đăng nhập
                             </Link>
-                            <button className="rounded-full bg-white px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base">
-                                Sign Up
-                            </button>
+                            <Link
+                                href="/register"
+                                className="rounded-full bg-white px-3 py-1.5 text-sm text-blue-600 transition-colors hover:bg-blue-50 md:px-4 md:py-2 md:text-base"
+                            >
+                                Đăng ký
+                            </Link>
 
                             {/* Mobile menu button */}
                             <button
-                                className="ml-2 md:hidden"
+                                className="ml-2 text-white md:hidden"
                                 onClick={() =>
                                     setIsMobileMenuOpen(!isMobileMenuOpen)
                                 }
@@ -299,21 +301,30 @@ const Header = () => {
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="border-t bg-white px-4 py-2 md:hidden">
+                <div className="border-t border-pink-300 bg-blue-50 px-4 py-2 md:hidden">
                     <nav className="flex flex-col space-y-3">
-                        <a href="#" className="py-2 hover:text-green-600">
-                            Browse
+                        <a
+                            href="#"
+                            className="py-2 text-blue-700 transition-colors hover:text-pink-600"
+                        >
+                            Khám phá
                         </a>
-                        <a href="#" className="py-2 hover:text-green-600">
-                            Community
+                        <a
+                            href="#"
+                            className="py-2 text-blue-700 transition-colors hover:text-pink-600"
+                        >
+                            Cộng đồng
                         </a>
-                        <a href="#" className="py-2 hover:text-green-600">
-                            Write
+                        <a
+                            href="#"
+                            className="py-2 text-blue-700 transition-colors hover:text-pink-600"
+                        >
+                            Viết
                         </a>
                         {user && (
                             <Link
                                 href={route('wallet.index')}
-                                className="flex items-center py-2 hover:text-green-600"
+                                className="flex items-center py-2 text-blue-700 transition-colors hover:text-pink-600"
                             >
                                 <Wallet className="mr-2 h-5 w-5" />
                                 <span>

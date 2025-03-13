@@ -50,6 +50,8 @@ class ComicController extends Controller
                 }
             }
         }
+
+        info($comic->has_vote);
         
         return Inertia::render('Comic/Detail', [
             'comic' => $comic,

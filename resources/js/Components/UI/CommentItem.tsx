@@ -1,6 +1,6 @@
 import { Comment, LaravelPagination, User } from '@/types/custom';
 import { formatDate } from '@/utils/formatDate';
-import { MoreVertical, Reply, ThumbsUp } from 'lucide-react';
+import { Heart, MessageCircle, MoreVertical, Reply } from 'lucide-react';
 import { FC, useState } from 'react';
 import Avatar from './Avatar';
 import { CommentForm } from './CommentForm';
@@ -28,6 +28,7 @@ export const CommentItem: FC<CommentItemProps> = ({
     const [replyingTo, setReplyingTo] = useState<number | null>(null);
     const [replyText, setReplyText] = useState('');
     const [currentReplyPage, setCurrentReplyPage] = useState<number>(1);
+    const [isLiked, setIsLiked] = useState(false);
 
     const handleReply = () => {
         if (replyText.trim()) {
@@ -41,6 +42,10 @@ export const CommentItem: FC<CommentItemProps> = ({
         const nextPage = currentReplyPage + 1;
         loadMoreReplies(comment.id, nextPage);
         setCurrentReplyPage(nextPage);
+    };
+
+    const handleLike = () => {
+        setIsLiked(!isLiked);
     };
 
     // Số lượng replies đã được tải
@@ -61,32 +66,38 @@ export const CommentItem: FC<CommentItemProps> = ({
             <div className="flex items-start space-x-3">
                 <Avatar user={comment.user} size="md" />
                 <div className="flex-grow">
-                    <div className="rounded-lg bg-gray-50 p-3">
+                    <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm">
                         <div className="flex items-center justify-between">
                             <h4 className="text-sm font-medium text-gray-900">
                                 {comment.user.name}
                             </h4>
-                            <div className="flex items-center space-x-1">
-                                <span className="text-xs text-gray-50">
+                            <div className="flex items-center space-x-2">
+                                <span className="text-xs text-gray-500">
                                     {formatDate(comment.created_at)}
                                 </span>
-                                <button className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                                <button className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-blue-600">
                                     <MoreVertical size={14} />
                                 </button>
                             </div>
                         </div>
-                        <p className="mt-1 text-sm text-gray-700">
+                        <p className="mt-2 text-sm text-gray-700">
                             {comment.content}
                         </p>
                     </div>
 
-                    <div className="mt-1 flex items-center space-x-4 pl-1">
-                        {/* <button className="flex items-center space-x-1 text-xs text-white/80 hover:text-orange-500">
-                            <ThumbsUp size={14} />
+                    <div className="mt-2 flex items-center space-x-4 pl-1">
+                        {/* <button
+                            className={`flex items-center space-x-1 text-xs ${isLiked ? 'text-pink-500' : 'text-white hover:text-pink-500'} transition-colors`}
+                            onClick={handleLike}
+                        >
+                            <Heart
+                                size={14}
+                                className={isLiked ? 'fill-pink-500' : ''}
+                            />
                             <span>Thích</span>
                         </button> */}
                         <button
-                            className="flex items-center space-x-1 text-xs text-white/80 hover:text-orange-500"
+                            className="flex items-center space-x-1 text-xs text-white transition-colors hover:text-blue-600"
                             onClick={() => setReplyingTo(comment.id)}
                         >
                             <Reply size={14} />
@@ -121,7 +132,7 @@ export const CommentItem: FC<CommentItemProps> = ({
                             {hasMoreReplies && (
                                 <button
                                     onClick={handleLoadMoreReplies}
-                                    className="mt-2 text-xs text-orange-500 hover:underline"
+                                    className="mt-2 text-xs text-blue-600 transition-colors hover:text-blue-800 hover:underline"
                                 >
                                     Xem thêm {remainingReplies} phản hồi...
                                 </button>
@@ -133,8 +144,9 @@ export const CommentItem: FC<CommentItemProps> = ({
                     {replies.length === 0 && totalRepliesCount > 0 && (
                         <button
                             onClick={() => loadMoreReplies(comment.id, 1)}
-                            className="mt-2 pl-6 text-xs text-orange-500 hover:underline"
+                            className="mt-2 flex items-center gap-1 pl-6 text-xs text-blue-600 hover:text-blue-800 hover:underline"
                         >
+                            <MessageCircle size={12} />
                             Xem {totalRepliesCount} phản hồi...
                         </button>
                     )}

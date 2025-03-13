@@ -2,22 +2,8 @@ import DefaultLayout from '@/Layouts/DefaultLayout';
 import { Comic } from '@/types/custom';
 import { Link, router } from '@inertiajs/react';
 import axios from 'axios';
+import { BookOpen, HeartIcon, MessagesSquare, User } from 'lucide-react';
 import { FC, useState } from 'react';
-
-// Cập nhật kiểu Chapter nếu cần trong file types/custom.ts
-// interface Chapter {
-//   id: number;
-//   title: string;
-//   order: number;
-//   description: string;
-//   read_count: number;
-//   vote_count: number;
-//   comments_count: number;
-//   updated_at: string;
-//   pricing: number;
-//   is_paid_content?: boolean;
-//   is_unlocked?: boolean;
-// }
 
 const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
     comic,
@@ -86,25 +72,28 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
         0,
     );
 
-    console.log('====================================');
-    console.log(comic.chapters);
-    console.log('====================================');
     return (
         <DefaultLayout>
-            <div className="min-h-screen bg-gray-100 font-sans">
+            <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-pink-50 py-12 font-sans">
                 {/* Main Content */}
                 <main className="mx-auto max-w-6xl p-4">
                     {/* Story Header */}
-                    <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-md md:flex-row">
+                    <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-lg md:flex-row">
                         {/* Book Cover */}
                         <div className="p-6 md:w-1/3">
                             <div className="book-container">
-                                <div className="book">
+                                <div className="book relative">
                                     <img
                                         src={comic.thumbnail.url}
                                         alt="Story Cover"
-                                        className="h-full w-full object-cover"
+                                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                     />
+                                    {/* Badge overlay */}
+                                    {comic.status === 'ongoing' && (
+                                        <div className="absolute right-0 top-4 rounded-l-full bg-blue-500 px-3 py-1 text-sm font-medium text-white shadow-md">
+                                            Đang cập nhật
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -112,26 +101,36 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                             <div className="mt-6 space-y-3">
                                 <Link
                                     href={`/comic/${comic.slug}/chapter/${comic.chapters[0].id}`}
-                                    className="block w-full rounded-full bg-orange-500 py-3 text-center font-bold text-white hover:bg-orange-600"
+                                    className="block w-full transform rounded-full bg-gradient-to-r from-blue-500 to-pink-500 py-3 text-center font-bold text-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                                 >
-                                    Start Reading
+                                    Bắt đầu đọc
                                 </Link>
-                                <div className="flex justify-between">
+                                <div className="flex justify-between gap-3">
                                     <button
                                         onClick={toggleVote}
-                                        className={`mr-2 flex w-1/2 items-center justify-center rounded-full border py-2 ${isVoted ? 'border-orange-500 bg-orange-100 text-orange-500' : 'border-gray-300'}`}
+                                        className={`flex w-1/2 items-center justify-center rounded-full border py-2 shadow-sm transition-all duration-300 ${
+                                            isVoted
+                                                ? 'border-pink-400 bg-pink-50 text-pink-500'
+                                                : 'border-gray-300 hover:border-pink-400 hover:bg-pink-50 hover:text-pink-500'
+                                        }`}
                                     >
-                                        <span className="mr-2">❤️</span>{' '}
+                                        <HeartIcon
+                                            className={`mr-2 h-5 w-5 ${isVoted ? 'fill-pink-500 text-pink-500' : 'text-gray-500'}`}
+                                        />{' '}
                                         {voteCount.toLocaleString()}
                                     </button>
                                     <button
                                         onClick={toggleBookmark}
-                                        className={`ml-2 flex w-1/2 items-center justify-center rounded-full border py-2 ${isBookmarked ? 'border-blue-500 bg-blue-100 text-blue-500' : 'border-gray-300'}`}
+                                        className={`flex w-1/2 items-center justify-center rounded-full border py-2 shadow-sm transition-all duration-300 ${
+                                            isBookmarked
+                                                ? 'border-blue-400 bg-blue-50 text-blue-500'
+                                                : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500'
+                                        }`}
                                     >
                                         <span className="mr-2">
                                             {isBookmarked ? '🔖' : '🔖'}
                                         </span>{' '}
-                                        Add
+                                        Lưu lại
                                     </button>
                                 </div>
                             </div>
@@ -140,47 +139,61 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                         {/* Story Details */}
                         <div className="p-6 md:w-2/3">
                             <div className="flex items-start justify-between">
-                                <h1 className="text-3xl font-bold">
+                                <h1 className="text-3xl font-bold text-gray-800">
                                     {comic.title}
                                 </h1>
                                 <div className="flex space-x-2 text-gray-500">
-                                    <button>⋮</button>
+                                    <button className="rounded-full p-2 transition-colors hover:bg-gray-100">
+                                        ⋮
+                                    </button>
                                 </div>
                             </div>
 
                             {/* Author Info */}
                             <div className="mt-4 flex items-center justify-between">
                                 <div className="flex items-center">
-                                    <div className="mr-3 flex aspect-square items-center justify-center rounded-full bg-green-500 px-3 uppercase text-white">
+                                    <div className="mr-3 flex aspect-square h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-pink-500 uppercase text-white shadow-md">
                                         <span>{comic.author.name[0]}</span>
                                     </div>
                                     <div>
-                                        <p className="font-semibold">
+                                        <p className="font-semibold text-gray-800">
                                             {comic.author.name}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            Tác giả
                                         </p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={toggleFollow}
-                                    className={`rounded-full px-4 py-2 text-sm font-semibold ${isFollowing ? 'bg-gray-200' : 'bg-orange-500 text-white'}`}
+                                    className={`rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300 ${
+                                        isFollowing
+                                            ? 'bg-gray-200 text-gray-800'
+                                            : 'bg-gradient-to-r from-blue-500 to-pink-500 text-white shadow-md hover:shadow-lg'
+                                    }`}
                                 >
-                                    {isFollowing ? 'Following' : 'Follow'}
+                                    {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
                                 </button>
                             </div>
 
                             {/* Story Stats */}
                             <div className="mt-6 flex space-x-6 text-sm text-gray-700">
                                 <div className="flex items-center">
-                                    <span className="mr-2">👁️</span>
-                                    <span>{readCount} Reads</span>
+                                    <BookOpen className="mr-2 h-5 w-5 text-blue-500" />
+                                    <span>
+                                        {readCount.toLocaleString()} Lượt đọc
+                                    </span>
                                 </div>
                                 <div className="flex items-center">
-                                    <span className="mr-2">📝</span>
-                                    <span>{comic.chapters.length} Parts</span>
+                                    <User className="mr-2 h-5 w-5 text-blue-500" />
+                                    <span>{comic.chapters.length} Chương</span>
                                 </div>
                                 <div className="flex items-center">
-                                    <span className="mr-2">💬</span>
-                                    <span>{commentCount} Comments</span>
+                                    <MessagesSquare className="mr-2 h-5 w-5 text-blue-500" />
+                                    <span>
+                                        {commentCount.toLocaleString()} Bình
+                                        luận
+                                    </span>
                                 </div>
                             </div>
 
@@ -189,7 +202,7 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                 {comic.tags.map((item) => (
                                     <span
                                         key={item.id}
-                                        className="rounded-full bg-gray-200 px-3 py-1 text-sm"
+                                        className="cursor-pointer rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700 transition-colors hover:bg-blue-200"
                                     >
                                         #{item.name}
                                     </span>
@@ -198,23 +211,23 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
 
                             {/* Description */}
                             <div className="mt-6">
-                                <h2 className="mb-2 text-xl font-semibold">
-                                    Description
+                                <h2 className="mb-2 text-xl font-semibold text-gray-800">
+                                    Giới thiệu
                                 </h2>
                                 <div
                                     dangerouslySetInnerHTML={{
                                         __html: comic.description,
                                     }}
-                                    className="text-gray-700"
+                                    className="rounded-lg bg-blue-50 p-4 text-gray-700"
                                 ></div>
                             </div>
 
                             {/* Wallet Balance (nếu có) */}
                             {walletBalance > 0 && (
-                                <div className="mt-4 rounded-lg bg-gray-100 p-3">
+                                <div className="mt-4 rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-pink-100 p-4">
                                     <p className="text-sm font-medium">
                                         Số dư ví:{' '}
-                                        <span className="text-green-600">
+                                        <span className="font-bold text-blue-600">
                                             {walletBalance.toLocaleString()} VND
                                         </span>
                                     </p>
@@ -223,10 +236,11 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
 
                             {/* Table of Contents Preview */}
                             <div className="mt-8">
-                                <h2 className="mb-4 text-xl font-semibold">
-                                    Table of Contents
+                                <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-gray-800">
+                                    <BookOpen className="h-5 w-5 text-blue-500" />
+                                    Danh sách chương
                                 </h2>
-                                <div className="space-y-3">
+                                <div className="space-y-3 overflow-hidden rounded-lg border border-gray-200">
                                     {comic.chapters.map((chapter) => {
                                         // Kiểm tra xem chapter có phải trả phí không
                                         const isPaid = chapter.pricing > 0;
@@ -237,26 +251,29 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                         return (
                                             <div
                                                 key={chapter.id}
-                                                className={`flex items-center justify-between border-b p-3 ${isPaid && !isUnlocked ? 'bg-gray-50' : ''}`}
+                                                className={`flex cursor-pointer items-center justify-between border-b border-gray-200 p-4 transition-colors hover:bg-blue-50 ${
+                                                    isPaid && !isUnlocked
+                                                        ? 'bg-gray-50'
+                                                        : ''
+                                                }`}
                                                 onClick={() =>
                                                     handleChapterClick(chapter)
                                                 }
-                                                style={{ cursor: 'pointer' }}
                                             >
                                                 <div>
-                                                    <div className="flex items-center">
-                                                        <p className="font-medium">
-                                                            Chapter{' '}
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="font-medium text-gray-800">
+                                                            Chương{' '}
                                                             {chapter.order}:{' '}
                                                             {chapter.title}
                                                         </p>
                                                         {isPaid && (
-                                                            <span className="ml-2 flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+                                                            <span className="ml-2 flex items-center rounded-full px-2 py-1 text-xs font-semibold shadow-sm">
                                                                 {isUnlocked ? (
-                                                                    <span className="flex items-center">
+                                                                    <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700">
                                                                         <svg
                                                                             xmlns="http://www.w3.org/2000/svg"
-                                                                            className="mr-1 h-3 w-3"
+                                                                            className="h-3 w-3"
                                                                             viewBox="0 0 20 20"
                                                                             fill="currentColor"
                                                                         >
@@ -269,10 +286,10 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                                                         Đã mở
                                                                     </span>
                                                                 ) : (
-                                                                    <span className="flex items-center">
+                                                                    <span className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-blue-700">
                                                                         <svg
                                                                             xmlns="http://www.w3.org/2000/svg"
-                                                                            className="mr-1 h-3 w-3"
+                                                                            className="h-3 w-3"
                                                                             viewBox="0 0 20 20"
                                                                             fill="currentColor"
                                                                         >
@@ -290,35 +307,36 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                                         )}
                                                     </div>
                                                     <p className="text-sm text-gray-500">
-                                                        Last updated:{' '}
+                                                        Cập nhật:{' '}
                                                         {new Date(
                                                             chapter.updated_at,
                                                         ).toLocaleDateString(
-                                                            'en-US',
+                                                            'vi-VN',
                                                             {
                                                                 month: 'short',
                                                                 day: '2-digit',
+                                                                year: 'numeric',
                                                             },
                                                         )}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-4 text-sm text-gray-500">
                                                     <span className="flex items-center gap-2">
-                                                        <small>👁️</small>{' '}
-                                                        {chapter.read_count}
+                                                        <BookOpen className="h-4 w-4 text-blue-500" />
+                                                        {chapter.read_count.toLocaleString()}
                                                     </span>
                                                     <span className="flex items-center gap-2">
-                                                        <small>💬</small>{' '}
-                                                        {chapter.comments_count}
+                                                        <MessagesSquare className="h-4 w-4 text-blue-500" />
+                                                        {chapter.comments_count.toLocaleString()}
                                                     </span>
                                                 </div>
                                             </div>
                                         );
                                     })}
                                     {comic.chapters.length > 4 && (
-                                        <button className="font-semibold text-orange-500 hover:underline">
-                                            View all {comic.chapters.length}{' '}
-                                            parts
+                                        <button className="w-full py-3 text-center font-semibold text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-800">
+                                            Xem tất cả {comic.chapters.length}{' '}
+                                            chương
                                         </button>
                                     )}
                                 </div>
@@ -327,35 +345,44 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                     </div>
 
                     {/* Recommended Stories */}
-                    <div className="mb-12 mt-8">
-                        <h2 className="mb-4 text-xl font-semibold">
-                            You might also like
+                    <div className="mb-12 mt-10">
+                        <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold text-gray-800">
+                            <span className="mr-2 inline-block h-1 w-6 rounded-full bg-gradient-to-r from-blue-500 to-pink-500"></span>
+                            Có thể bạn cũng thích
                         </h2>
-                        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                             {[1, 2, 3, 4].map((index) => (
                                 <div
                                     key={index}
-                                    className="overflow-hidden rounded-lg bg-white shadow-md"
+                                    className="overflow-hidden rounded-xl bg-white shadow-lg transition-transform duration-300 hover:scale-[1.03]"
                                 >
-                                    <div className="aspect-[2/3] bg-gray-300">
+                                    <div className="relative aspect-[2/3] bg-gray-300">
                                         <img
                                             src={`/api/placeholder/${300 + index}/${450 + index}`}
                                             alt={`Recommended Story ${index}`}
                                             className="h-full w-full object-cover"
                                         />
+                                        {/* Badge overlay */}
+                                        <div className="absolute left-0 top-2 rounded-r-full bg-blue-500 px-3 py-0.5 text-xs font-medium text-white shadow-md">
+                                            Hot
+                                        </div>
                                     </div>
-                                    <div className="p-3">
-                                        <h3 className="font-semibold">
-                                            Book Title {index}
+                                    <div className="p-4">
+                                        <h3 className="font-semibold text-gray-800 transition-colors hover:text-blue-600">
+                                            Tên truyện {index}
                                         </h3>
                                         <p className="text-sm text-gray-500">
-                                            by Author {index}
+                                            bởi Tác giả {index}
                                         </p>
                                         <div className="mt-2 flex items-center text-sm text-gray-700">
-                                            <span className="mr-2">
-                                                👁️ 1.2M
+                                            <span className="mr-3 flex items-center">
+                                                <BookOpen className="mr-1 h-3 w-3 text-blue-500" />
+                                                1.2M
                                             </span>
-                                            <span>❤️ 85K</span>
+                                            <span className="flex items-center">
+                                                <HeartIcon className="mr-1 h-3 w-3 text-pink-500" />
+                                                85K
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

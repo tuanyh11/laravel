@@ -1,8 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { ArrowBigLeft } from 'lucide-react';
+import { ArrowLeft, Heart, MessageCircle } from 'lucide-react';
 import { FC } from 'react';
-import { BiComment } from 'react-icons/bi';
-import { FaVoteYea } from 'react-icons/fa';
 
 interface FloatingButtonsProps {
     onToggleComments: () => void;
@@ -16,24 +13,33 @@ const FloatingButtons: FC<FloatingButtonsProps> = ({
     isVoted = false,
 }) => {
     return (
-        <div className="absolute bottom-2 right-2 z-40 grid grid-cols-1 gap-3">
+        <div className="absolute bottom-4 right-4 z-40 flex flex-col gap-3">
             <button
-                className="rounded-sm bg-orange-500 p-2 text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-lg transition-all hover:bg-gray-50"
                 onClick={() => window.history.back()}
+                title="Quay lại"
             >
-                <ArrowBigLeft className="text-lg" />
+                <ArrowLeft className="h-5 w-5" />
             </button>
+
             <button
-                className="rounded-sm bg-orange-500 p-2 text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-lg transition-all hover:bg-gray-50"
                 onClick={onToggleComments}
+                title="Bình luận"
             >
-                <BiComment className="text-lg" />
+                <MessageCircle className="h-5 w-5" />
             </button>
+
             <button
                 onClick={onVote}
-                className={`rounded-sm p-2 text-white ${isVoted ? 'bg-orange-500' : 'bg-slate-400'}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-full shadow-lg ${
+                    isVoted
+                        ? 'bg-gradient-to-r from-blue-500 to-pink-500 text-white hover:from-blue-600 hover:to-pink-600'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                } transition-all`}
+                title="Thích"
             >
-                <FaVoteYea className="text-lg" />
+                <Heart className={`h-5 w-5 ${isVoted ? 'fill-white' : ''}`} />
             </button>
         </div>
     );
