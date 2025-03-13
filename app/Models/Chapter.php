@@ -15,7 +15,8 @@ class Chapter extends Model
         'comic_id',
         'media_id',
         'vote_count',
-        'read_count'
+        'read_count',
+        'pricing' // Thêm trường pricing vào danh sách fillable
     ];
 
     public function comic()
@@ -64,5 +65,19 @@ class Chapter extends Model
     public function isPaidContent(): bool
     {
         return $this->pricing > 0;
+    }
+
+    /**
+     * Check if user has access to this chapter
+     */
+    public function isAccessibleBy(User $user): bool
+    {
+        // Nếu chapter miễn phí, trả về true
+        if (!$this->isPaidContent()) {
+            return true;
+        }
+
+        // Kiểm tra xem user đã mua chapter này chưa
+        return $this->purchasedBy()->where('user_id', $user->id)->exists();
     }
 }

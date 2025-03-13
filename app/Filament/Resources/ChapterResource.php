@@ -13,6 +13,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -46,9 +47,8 @@ class ChapterResource extends Resource
                     TextInput::make('order')
                         ->required()
                         ->numeric()
-                        ->minValue(1)
-                    ,
-                     TextInput::make('read_count')
+                        ->minValue(1),
+                    TextInput::make('read_count')
                         ->numeric()
                         ->minValue(0)
                         ->default(0),
@@ -57,13 +57,17 @@ class ChapterResource extends Resource
                         ->minValue(0)
                         ->default(0),
                     CuratorPicker::make('media_id')
-                    ->label('Media')
-                    ->relationship('media', 'id'),
-                    // ->,
+                        ->label('Media')
+                        ->relationship('media', 'id'),
+                    TextInput::make('pricing')
+                        ->label('Giá (đặt 0 cho nội dung miễn phí)')
+                        ->numeric()
+                        ->minValue(0)
+                        ->default(0)
+                        ->helperText('Nếu giá > 0, chapter sẽ cần được mở khóa bằng cách thanh toán'),
                     RichEditor::make('description')
                         ->required()
                         ->columnSpanFull(),
-
         ]);
     }
 
@@ -87,9 +91,36 @@ class ChapterResource extends Resource
                 Tables\Columns\TextColumn::make('comic_id')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('pricing')
+                    ->numeric()
+                    ->sortable()
+                    ->label('Giá')
+                    ->formatStateUsing(fn (int $state): string => $state > 0 ? "$state (Trả phí)" : "Miễn phí"),
+                Tables\Columns\IconColumn::make('isPaidContent')
+                    ->label('Khóa')
+                    ->boolean()
+                    ->getStateUsing(fn (Chapter $record): bool => $record->isPaidContent())
+                    ->trueIcon('heroicon-o-lock-closed')
+                    ->falseIcon('heroicon-o-lock-open'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('content_type')
+                    ->label('Loại nội dung')
+                    ->options([
+                        'free' => 'Miễn phí',
+                        'paid' => 'Trả phí',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when(
+                                $data['value'] === 'free',
+                                fn (Builder $query): Builder => $query->where('pricing', 0),
+                            )
+                            ->when(
+                                $data['value'] === 'paid',
+                                fn (Builder $query): Builder => $query->where('pricing', '>', 0),
+                            );
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

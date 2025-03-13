@@ -69,6 +69,9 @@ export type Chapter = {
     updated_at: string;
     comments: LaravelPagination<Comment>;
     has_voted: boolean;
+    is_paid_content?: boolean;
+    is_unlocked?: boolean;
+    pricing: number;
 };
 
 export type Comment = {

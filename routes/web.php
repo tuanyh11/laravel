@@ -114,6 +114,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/payment/failed', [VNPayController::class, 'showFailedPage'])->name('payment.failed');
     Route::get('/payment/success', [VNPayController::class, 'showSuccessPage'])->name('payment.success');
+
+    Route::post('/chapters/{chapter_id}/purchase', [ChapterController::class, 'purchaseWithWallet'])
+    ->name('chapters.purchase-with-wallet');
 });
 
 require __DIR__ . '/auth.php';

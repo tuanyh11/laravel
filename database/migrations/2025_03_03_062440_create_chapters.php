@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('order');
             $table->integer('read_count')->default(0);
             $table->integer('vote_count')->default(0);
-            $table->foreignIdFor(Comic::class)->unique()->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Comic::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('media_id')->constrained('media')->cascadeOnDelete();
         });
 

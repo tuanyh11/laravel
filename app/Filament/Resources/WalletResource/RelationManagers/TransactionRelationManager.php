@@ -1,39 +1,23 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\WalletResource\RelationManagers;
 
-use App\Filament\Resources\WalletTransactionResource\Pages;
-use App\Filament\Resources\WalletTransactionResource\RelationManagers;
-use App\Models\WalletTransaction;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class WalletTransactionResource extends Resource
+class TransactionRelationManager extends RelationManager
 {
-    protected static ?string $model = WalletTransaction::class;
+    protected static string $relationship = 'transactions';
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
-    protected static ?string $navigationLabel = 'Wallet Transactions';
-    protected static ?string $navigationGroup = 'Finance';
-    protected static ?int $navigationSort = 3;
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('wallet_id')
-                    ->relationship('wallet', 'id')
-                    ->required()
-                    ->searchable(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required()
-                    ->searchable(),
                 Forms\Components\TextInput::make('transaction_id')
                     ->maxLength(255),
                 Forms\Components\Select::make('type')
@@ -72,19 +56,12 @@ class WalletTransactionResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('wallet.id')
-                    ->label('Wallet ID')
-                    ->sortable()
-                    ->numeric(),
-                Tables\Columns\TextColumn::make('user.name')
-                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('transaction_id')
                     ->searchable(),
@@ -122,9 +99,6 @@ class WalletTransactionResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('wallet_id')
-                    ->relationship('wallet', 'id')
-                    ->label('Wallet'),
                 Tables\Filters\SelectFilter::make('type')
                     ->options([
                         'deposit' => 'Deposit',
@@ -139,47 +113,18 @@ class WalletTransactionResource extends Resource
                         'failed' => 'Failed',
                         'cancelled' => 'Cancelled',
                     ]),
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from'),
-                        Forms\Components\DatePicker::make('created_until'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    }),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListWalletTransactions::route('/'),
-            'create' => Pages\CreateWalletTransaction::route('/create'),
-            'edit' => Pages\EditWalletTransaction::route('/{record}/edit'),
-        ];
     }
 }
