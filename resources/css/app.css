@@ -20,6 +20,10 @@
     }
 }
 
+.swiper-slide {
+    width: 100%;
+}
+
 .book {
     width: 12.5rem;
     aspect-ratio: 20/30;
