@@ -29,88 +29,39 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::routes(['middleware' => ['web', 'auth:admin']]);
 // Routes/web.php - Updated Route for Welcome page
 
-// Routes/web.php - Updated Route for Welcome page
-
+// Cập nhật Route cho trang Welcome
 Route::get('/', function () {
-    // Set default values to prevent potential null reference errors
-    // Get featured comics with author info and thumbnail
-    $featuredComics = Comic::with(['author' => function ($query) {
+    // Lấy truyện nổi bật (featured comic) - lấy truyện có lượt đọc cao nhất
+    $featuredComic = Comic::with(['author' => function ($query) {
         $query->select('id', 'name', 'avatar');
     }])
     ->with('thumbnail')
     ->with('genres')
+    ->with(['chapters' => function($query) {
+        $query->count();
+    }])
     ->orderBy('read_count', 'desc')
-    ->take(5)
-    ->get()
-    ->map(function ($comic) {
-        // Ensure read_count and vote_count are always defined
-        $comic->read_count = $comic->read_count ?? 0;
-        $comic->vote_count = $comic->vote_count ?? 0;
-        return $comic;
-    });
+    ->first();
 
-    // Get comics by popularity (most read)
-    $popularComics = Comic::with(['author' => function ($query) {
-        $query->select('id', 'name');
-    }])
+    // Định dạng dữ liệu cho featuredComic
+    // Lấy danh sách truyện cho carousel
+    $comicList = Comic::with('thumbnail')
     ->with('thumbnail')
-    ->orderBy('read_count', 'desc')
-    ->take(6)
-    ->get()
-    ->map(function ($comic) {
-        // Ensure read_count and vote_count are always defined
-        $comic->read_count = $comic->read_count ?? 0;
-        $comic->vote_count = $comic->vote_count ?? 0;
-        return $comic;
-    });
-
-    // Get comics by genre groups
-    $genres = Genres::with(['comics' => function ($query) {
-        $query->with(['author' => function ($q) {
-            $q->select('id', 'name');
-        }])
-        ->with('thumbnail')
-        ->take(5);
+    ->with('genres')
+    ->with(['chapters' => function($query) {
+        $query->count();
     }])
-    ->take(4)
-    ->get();
-    
-    // Ensure all comics in genres have read_count and vote_count defined
-    $genres = $genres->map(function ($genre) {
-        if ($genre->comics) {
-            $genre->comics = $genre->comics->map(function ($comic) {
-                $comic->read_count = $comic->read_count ?? 0;
-                $comic->vote_count = $comic->vote_count ?? 0;
-                return $comic;
-            });
-        }
-        return $genre;
-    });
-
-    // Get latest comics
-    $latestComics = Comic::with(['author' => function ($query) {
-        $query->select('id', 'name');
-    }])
-    ->with('thumbnail')
-    ->latest()
-    ->take(5)
-    ->get()
-    ->map(function ($comic) {
-        // Ensure read_count and vote_count are always defined
-        $comic->read_count = $comic->read_count ?? 0;
-        $comic->vote_count = $comic->vote_count ?? 0;
-        return $comic;
-    });
-
+        ->orderBy('read_count', 'desc')
+        ->take(9)
+        ->get();
+        
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
-        'featuredComics' => $featuredComics,
-        'popularComics' => $popularComics,
-        'genreGroups' => $genres,
-        'latestComics' => $latestComics,
+        'featuredComic' => $featuredComic,
+        'comicList' => $comicList,
     ]);
 });
 
