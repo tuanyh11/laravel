@@ -1,10 +1,10 @@
-// types.ts
 import { CommentsSidebar } from '@/Components/UI/CommentsSidebar';
 import FloatingButtons from '@/Components/UI/FloatingButtons';
 import PDFViewer from '@/Components/UI/PDFViewer';
 import useChapterComments from '@/hooks/useChapterComments';
 import useResizable from '@/hooks/useResizable';
-import { Chapter, User } from '@/types/custom';
+import { PageProps } from '@/types';
+import { Chapter } from '@/types/custom';
 import { usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { FC, useState } from 'react';
@@ -12,16 +12,14 @@ import { toast } from 'react-toastify';
 
 const ChapterDetail: FC = () => {
     // Use Inertia's usePage to get props
-    const { chapter, auth } = usePage().props as unknown as {
-        chapter: Chapter;
-        auth: { user: User };
-    };
+    const { chapter, auth } = usePage<PageProps<{ chapter: Chapter }>>().props;
 
     const [hasVoted, setHasVoted] = useState(chapter.has_voted);
 
     // Use authenticated user from Inertia props
     const currentUser = auth.user;
-
+    console.log(auth);
+    
     // Custom hooks
     const {
         sidebarWidth,
@@ -41,6 +39,10 @@ const ChapterDetail: FC = () => {
         comments,
         addComment,
         addReply,
+        loadMoreComments,
+        loadMoreReplies,
+        commentPagination,
+        replyPaginations,
     } = useChapterComments(chapter, currentUser);
 
     const onVote = async () => {
@@ -54,12 +56,12 @@ const ChapterDetail: FC = () => {
     return (
         <div ref={containerRef} className="relative flex h-[100dvh] w-full">
             <div
-                className={`transition-all ${showComments ? 'w-full pr-2' : 'w-full'}`}
-                style={{
-                    width: showComments
-                        ? `calc(100% - ${sidebarWidth}px)`
-                        : '100%',
-                }}
+                className={`transition-all ${showComments ? 'w-full' : 'w-full'}`}
+                // style={{
+                //     width: showComments
+                //         ? `calc(100% - ${sidebarWidth}px)`
+                //         : '100%',
+                // }}
             >
                 {!showComments && (
                     <FloatingButtons
@@ -76,10 +78,12 @@ const ChapterDetail: FC = () => {
             {showComments && (
                 <div
                     ref={resizerRef}
-                    className={`absolute right-auto top-0 z-20 h-full w-1 cursor-col-resize bg-transparent hover:bg-blue-500 ${isDragging ? 'bg-blue-500' : ''}`}
-                    style={{
-                        left: `calc(100% - ${sidebarWidth}px - 2px)`,
-                    }}
+                    className={`absolute right-auto top-0 z-20 h-full w-1 bg-black/10 backdrop-blur-sm hover:bg-blue-500 ${
+                        isDragging ? 'bg-blue-500' : ''
+                    }`}
+                    // style={{
+                    //     left: `calc(100% - ${sidebarWidth}px - 2px)`,
+                    // }}
                     onMouseDown={handleMouseDown}
                 />
             )}
@@ -97,6 +101,10 @@ const ChapterDetail: FC = () => {
                 addReply={addReply}
                 isSubmitting={isSubmitting}
                 commentListRef={commentListRef}
+                loadMoreComments={loadMoreComments}
+                loadMoreReplies={loadMoreReplies}
+                commentPagination={commentPagination || undefined}
+                replyPaginations={replyPaginations}
             />
         </div>
     );

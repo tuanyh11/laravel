@@ -43,6 +43,7 @@ class CommentEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
+        info("reply");
 
         if ($this->action === 'reply' && $this->comment->parent_id) {
             // Broadcast to the user who made the original comment
@@ -72,7 +73,7 @@ class CommentEvent implements ShouldBroadcastNow
      */
     public function broadcastWith(): array
     {
-        $this->comment->load(['user', 'parent.user']);
+        $this->comment->load(['user.avatar', 'parent.user.avatar']);
         return [
             'comment' => $this->comment,
             'action' => $this->action,

@@ -29,7 +29,7 @@ const Avatar: FC<AvatarProps> = ({ user, size }) => {
 
     return (
         <div
-            className={`${sizeClasses} flex-shrink-0 items-center justify-center rounded-full ${bgColor} flex`}
+            className={`${sizeClasses} flex-shrink-0 items-center justify-center rounded-full backdrop-blur-lg ${bgColor} flex`}
         >
             <span className="font-medium text-white">{firstLetter}</span>
         </div>

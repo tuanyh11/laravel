@@ -9,6 +9,8 @@ use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -54,13 +56,47 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    public function avatar() {
+    public function avatar()
+    {
         return $this->belongsTo(Media::class, 'avatar');
     }
 
-    // public function canAccessPanel(Panel $panel): bool
-    // {
-    // dump($this->hasRole(Utils::getSuperAdminName()));
-    //  return true;
-    // }
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Get the payments made by the user.
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
+     * Get the wallet transactions made by the user.
+     */
+    public function walletTransactions(): HasMany
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
+    /**
+     * Get the chapters purchased by the user.
+     */
+    public function purchasedChapters(): HasMany
+    {
+        return $this->hasMany(PurchasedChapter::class);
+    }
+
+    /**
+     * Check if the user has purchased a specific chapter.
+     */
+    public function hasPurchased(Chapter $chapter): bool
+    {
+        return $this->purchasedChapters()
+            ->where('chapter_id', $chapter->id)
+            ->exists();
+    }
 }

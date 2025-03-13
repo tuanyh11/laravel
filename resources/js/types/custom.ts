@@ -14,6 +14,14 @@ export interface LaravelPagination<T> {
     total: number;
 }
 
+export type ReplyPaginationsMap = Record<number, LaravelPagination<Comment>>;
+
+// Define a specialized type for grouped comments
+export interface GroupedComment {
+    comment: Comment;
+    replies: Comment[];
+}
+
 interface PaginationLink {
     url: string | null;
     label: string;
@@ -80,3 +88,17 @@ interface Media {
     url: string;
     alt?: string;
 }
+
+export interface Transaction {
+    id: number;
+    amount: string;
+    balance_after: string;
+    balance_before: string;
+    created_at: string;
+    description: string;
+    status: string;
+    transaction_id: string;
+    type: TransactionType;
+}
+
+export type TransactionType = 'deposit' | 'withdrawal' | 'purchase';

@@ -26,10 +26,10 @@ export const CommentReply: FC<CommentReplyProps> = ({ reply }) => {
                         {reply.content}
                     </p>
                 </div>
-                <button className="mt-1 flex items-center space-x-1 pl-1 text-xs text-gray-500 hover:text-blue-600">
+                {/* <button className="mt-1 flex items-center space-x-1 pl-1 text-xs text-gray-500 hover:text-blue-600">
                     <ThumbsUp size={12} />
                     <span>Thích</span>
-                </button>
+                </button> */}
             </div>
         </div>
     );

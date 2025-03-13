@@ -33,4 +33,20 @@ class Comment extends Model
     {
         return $this->belongsTo(Comment::class, 'parent_id');
     }
+
+     public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+
+    public function getRepliesCountAttribute()
+    {
+        // If the replies_count was already loaded via withCount()
+        if (array_key_exists('replies_count', $this->attributes)) {
+            return $this->attributes['replies_count'];
+        }
+
+        // Otherwise, calculate it
+        return $this->replies()->count();
+    }
 }

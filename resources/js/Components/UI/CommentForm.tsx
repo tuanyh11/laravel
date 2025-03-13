@@ -36,7 +36,7 @@ export const CommentForm: FC<CommentFormProps> = ({
                 />
                 <div className="mt-2 flex space-x-2">
                     <button
-                        className={`rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700 ${isSubmitting ? 'cursor-not-allowed opacity-70' : ''}`}
+                        className={`rounded-md bg-orange-500 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-orange-500 ${isSubmitting ? 'cursor-not-allowed opacity-70' : ''}`}
                         onClick={onSubmit}
                         disabled={isSubmitting}
                     >

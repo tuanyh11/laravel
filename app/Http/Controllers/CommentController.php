@@ -29,46 +29,46 @@ class CommentController extends Controller
     }
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'content' => 'required|string',
-            'chapter_id' => 'required|exists:chapters,id',
-            'parent_id' => 'nullable|exists:comments,id',
-        ]);
+    $validated = $request->validate([
+        'content' => 'required|string',
+        'chapter_id' => 'required|exists:chapters,id',
+        'parent_id' => 'nullable|exists:comments,id',
+    ]);
 
 
-        $comment = Comment::create([
-            'content' => $validated['content'],
-            'user_id' => Auth::id(),
-            'chapter_id' => $validated['chapter_id'],
-            'parent_id' => $validated['parent_id'],
-            'comic_id' => 1
-        ]);
+    $comment = Comment::create([
+        'content' => $validated['content'],
+        'user_id' => Auth::id(),
+        'chapter_id' => $validated['chapter_id'],
+        'parent_id' => $validated['parent_id'],
+        'comic_id' => 1
+    ]);
 
 
 
 
-        // Load the user relationship
-        $comment->load('user');
+    // Load the user relationship
+    $comment->load('user');
 
-        // If this is a reply to another comment
-        if ($comment->parent_id) {
-            // Get the original comment's user
-            $parentComment = Comment::find($comment->parent_id);
-            $originalUser = User::find($parentComment->user_id);
-            // Don't notify if user is replying to their own comment
-            if (Auth::id() !== $originalUser->id) {
-                // Send notification to the original commenter
-                $originalUser->notify(new CommentReplyNotification($comment));
+    // If this is a reply to another comment
+    if ($comment->parent_id) {
+        // Get the original comment's user
+        $parentComment = Comment::find($comment->parent_id);
+        $originalUser = User::find($parentComment->user_id);
+        // Don't notify if user is replying to their own comment
+        if (Auth::id() !== $originalUser->id) {
+            // Send notification to the original commenter
+            $originalUser->notify(new CommentReplyNotification($comment));
 
-                // Broadcast the reply event
-                event(new CommentEvent($comment, 'reply'));
-            }
-        } else {
-            Log::info("test2", $comment->parent_id);
-
-            // Broadcast new comment event to chapter channel
-            event(new CommentEvent($comment, 'new'));
+            // Broadcast the reply event
+            event(new CommentEvent($comment, 'reply'));
         }
+    } else {
+        Log::info("test2", $comment->parent_id);
+
+        // Broadcast new comment event to chapter channel
+        event(new CommentEvent($comment, 'new'));
+    }
 
         return back()->with('success', 'Comment posted successfully');
     }
