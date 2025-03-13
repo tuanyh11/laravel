@@ -38,9 +38,9 @@ class WalletController extends Controller
                         'id' => $transaction->id,
                         'transaction_id' => $transaction->transaction_id,
                         'type' => $transaction->type,
-                        'amount' => number_format($transaction->amount, 2),
-                        'balance_before' => number_format($transaction->balance_before, 2),
-                        'balance_after' => number_format($transaction->balance_after, 2),
+                        'amount' => number_format($transaction->amount, 0, ',', '.') . ' ₫',
+                        'balance_before' => number_format($transaction->balance_before, 0, ',', '.') . ' ₫',
+                        'balance_after' => number_format($transaction->balance_after, 0, ',', '.') . ' ₫',
                         'description' => $transaction->description,
                         'status' => $transaction->status,
                         'created_at' => $transaction->created_at,
@@ -89,7 +89,7 @@ class WalletController extends Controller
             );
             
             return redirect()->route('wallet.index')
-                ->with('success', "Successfully added {$amount} to your wallet.");
+                ->with('success', "Successfully added " . number_format($amount, 0, ',', '.') . " ₫ to your wallet.");
         } catch (\Exception $e) {
             return back()->withErrors(['message' => 'Failed to add funds: ' . $e->getMessage()]);
         }
@@ -115,7 +115,7 @@ class WalletController extends Controller
                             'slug' => $purchase->chapter->comic->slug,
                         ]
                     ],
-                    'price_paid' => number_format($purchase->price_paid, 2),
+                    'price_paid' => number_format($purchase->price_paid, 0, ',', '.') . ' ₫',
                     'purchased_at' => $purchase->created_at->format('Y-m-d H:i:s'),
                 ];
             });

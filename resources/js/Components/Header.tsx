@@ -79,7 +79,7 @@ const Header = () => {
                                                 Your Balance
                                             </p>
                                             <p className="text-xl font-bold text-green-600">
-                                                {wallet?.balance || '0.00'}{' '}
+                                                {wallet?.balance || '0'}{' '}
                                                 {wallet.currency}
                                             </p>
                                         </div>

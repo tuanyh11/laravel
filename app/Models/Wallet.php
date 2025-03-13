@@ -18,7 +18,11 @@ class Wallet extends Model
     ];
 
     protected $casts = [
-        'balance' => 'decimal:2',
+        'balance' => 'decimal:0',
+    ];
+
+    protected $attributes = [
+        'currency' => 'VND', // Đặt mặc định là VND
     ];
 
     /**

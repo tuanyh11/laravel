@@ -54,13 +54,12 @@ class HandleInertiaRequests extends Middleware
                 
                 if (!$wallet) {
                     return [
-                        'balance' => '0.00',
+                        'balance' => '0',
                         'currency' => 'VND',
                     ];
                 }
-                
                 return [
-                    'balance' => number_format($wallet->balance, 2),
+                    'balance' => number_format($wallet->balance, 0),
                     'currency' => $wallet->currency,
                 ];
             },

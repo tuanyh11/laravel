@@ -158,7 +158,6 @@ class VNPayService
         $vnp_TransactionNo = $request->vnp_TransactionNo;
         $vnp_BankCode = $request->vnp_BankCode;
         
-        info($request->all());
         // Verify hash signature
         $inputData = [];
         foreach ($request->all() as $key => $value) {
