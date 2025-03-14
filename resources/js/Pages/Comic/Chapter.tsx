@@ -1,6 +1,6 @@
 import { CommentsSidebar } from '@/Components/UI/CommentsSidebar';
 import FloatingButtons from '@/Components/UI/FloatingButtons';
-import PDFViewer from '@/Components/UI/PDFViewer';
+import PDFFlipbook from '@/Components/UI/PDFFlipbook';
 import useChapterComments from '@/hooks/useChapterComments';
 import useResizable from '@/hooks/useResizable';
 import { PageProps } from '@/types';
@@ -18,8 +18,7 @@ const ChapterDetail: FC = () => {
 
     // Use authenticated user from Inertia props
     const currentUser = auth.user;
-    console.log(auth);
-    
+
     // Custom hooks
     const {
         sidebarWidth,
@@ -71,7 +70,8 @@ const ChapterDetail: FC = () => {
                     />
                 )}
 
-                <PDFViewer fileUrl={chapter.media.url} />
+                {/* Replace PDFViewer with PDFFlipbook */}
+                <PDFFlipbook fileUrl={chapter.media.url} />
             </div>
 
             {/* Resizer handle */}

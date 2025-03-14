@@ -29,7 +29,7 @@ class ComicController extends Controller
             ->with('thumbnail')
             ->with('tags')
             ->firstOrFail();
-        
+        info($comic);
         // Lấy số dư ví của người dùng
         $walletBalance = 0;
         $user = Auth::user();

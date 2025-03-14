@@ -81,7 +81,7 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                     <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-lg md:flex-row">
                         {/* Book Cover */}
                         <div className="p-6 md:w-1/3">
-                            <div className="book-container">
+                            <div className="book-container py-5">
                                 <div className="book relative">
                                     <img
                                         src={comic.thumbnail.url}
@@ -99,12 +99,18 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
 
                             {/* Action Buttons */}
                             <div className="mt-6 space-y-3">
-                                <Link
-                                    href={`/comic/${comic.slug}/chapter/${comic.chapters[0].id}`}
-                                    className="block w-full transform rounded-full bg-gradient-to-r from-blue-500 to-pink-500 py-3 text-center font-bold text-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                                >
-                                    Bắt đầu đọc
-                                </Link>
+                                {comic.chapters[0] ? (
+                                    <Link
+                                        href={`/comic/${comic.slug}/chapter/${comic.chapters[0]?.id}`}
+                                        className="block w-full transform rounded-full bg-gradient-to-r from-blue-500 to-pink-500 py-3 text-center font-bold text-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                                    >
+                                        Bắt đầu đọc
+                                    </Link>
+                                ) : (
+                                    <button className="pointer-events-none block w-full transform rounded-full bg-gradient-to-r from-blue-500 to-pink-500 px-2 py-3 text-center font-bold text-white opacity-30 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                                        Truyện đang trong quá trình xuất bản
+                                    </button>
+                                )}
                                 <div className="flex justify-between gap-3">
                                     <button
                                         onClick={toggleVote}
