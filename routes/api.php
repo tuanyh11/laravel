@@ -21,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Comic search API endpoint
 Route::get('/comics/search', [ComicController::class, 'search']);
+
+Route::get('/comics/recommendations', [ComicController::class, 'getRecommendations']);

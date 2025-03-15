@@ -1,3 +1,4 @@
+import RecommendedComics from '@/Components/UI/RecommendedComics';
 import DefaultLayout from '@/Layouts/DefaultLayout';
 import { Comic } from '@/types/custom';
 import { Link, router } from '@inertiajs/react';
@@ -67,6 +68,8 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
         0,
     );
 
+    // Lấy danh sách tag_ids
+    const tagIds = comic.tags.map((tag) => tag.id);
     return (
         <DefaultLayout>
             <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-pink-50 py-12 font-sans">
@@ -272,7 +275,15 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                                                 Đã đọc
                                                             </span>
                                                         )}
-                                                        {/* Hiển thị thông tin khóa/mở khóa */}
+                                                        {isPaid &&
+                                                            !isUnlocked && (
+                                                                <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                                                                    {
+                                                                        chapter.pricing
+                                                                    }
+                                                                    đ
+                                                                </span>
+                                                            )}
                                                     </div>
                                                     <p className="text-sm text-gray-500">
                                                         Cập nhật:{' '}
@@ -313,44 +324,10 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                             <span className="mr-2 inline-block h-1 w-6 rounded-full bg-gradient-to-r from-blue-500 to-pink-500"></span>
                             Có thể bạn cũng thích
                         </h2>
-                        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-                            {[1, 2, 3, 4].map((index) => (
-                                <div
-                                    key={index}
-                                    className="overflow-hidden rounded-xl bg-white shadow-lg transition-transform duration-300 hover:scale-[1.03]"
-                                >
-                                    <div className="relative aspect-[2/3] bg-gray-300">
-                                        <img
-                                            src={`/api/placeholder/${300 + index}/${450 + index}`}
-                                            alt={`Recommended Story ${index}`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                        {/* Badge overlay */}
-                                        <div className="absolute left-0 top-2 rounded-r-full bg-blue-500 px-3 py-0.5 text-xs font-medium text-white shadow-md">
-                                            Hot
-                                        </div>
-                                    </div>
-                                    <div className="p-4">
-                                        <h3 className="font-semibold text-gray-800 transition-colors hover:text-blue-600">
-                                            Tên truyện {index}
-                                        </h3>
-                                        <p className="text-sm text-gray-500">
-                                            bởi Tác giả {index}
-                                        </p>
-                                        <div className="mt-2 flex items-center text-sm text-gray-700">
-                                            <span className="mr-3 flex items-center">
-                                                <BookOpen className="mr-1 h-3 w-3 text-blue-500" />
-                                                1.2M
-                                            </span>
-                                            <span className="flex items-center">
-                                                <HeartIcon className="mr-1 h-3 w-3 text-pink-500" />
-                                                85K
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        <RecommendedComics
+                            currentComicId={comic.id}
+                            tagIds={tagIds}
+                        />
                     </div>
                 </main>
             </div>
