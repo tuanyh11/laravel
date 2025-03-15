@@ -62,7 +62,6 @@ class ComicResource extends Resource
                     // ->disabled(),
 
                    
-
                     Group::make([RichEditor::make('description')
                         ->columnSpan(2)
                         ->required()])

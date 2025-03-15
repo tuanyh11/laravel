@@ -11,7 +11,7 @@ const Login = () => {
         remember: false,
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
@@ -19,13 +19,13 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         router.post('/login', formData);
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = '/auth/google/redirect';
+        window.location.href = 'auth/google/redirect';
     };
 
     return (

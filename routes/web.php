@@ -70,6 +70,9 @@ Route::get('/comic', function () {
         $query->select('id', 'name');
     }])
         ->with('thumbnail')
+        ->with('chapters')
+        ->withSum('chapters as read_count', 'read_count')  // Đổi tên thành total_reads
+        ->withSum('chapters as vote_count', 'vote_count') 
         ->paginate(5);
     $genres = Genres::all();
 

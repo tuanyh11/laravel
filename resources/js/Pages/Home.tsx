@@ -1,5 +1,6 @@
 import DefaultLayout from '@/Layouts/DefaultLayout';
-import { Comic, Genre, LaravelPagination } from '@/types/custom';
+import { Chapter, Comic, Genre, LaravelPagination } from '@/types/custom';
+import formatCount from '@/utils/formatCount';
 import { Link } from '@inertiajs/react';
 import {
     BookOpen,
@@ -12,13 +13,17 @@ import {
 import { FC, useState } from 'react';
 
 const Home: FC<{
-    comics: LaravelPagination<Comic>;
+    comics: LaravelPagination<
+        Comic & Pick<Chapter, 'read_count' | 'vote_count'>
+    >;
     genres: Genre[];
 }> = ({ comics, genres }) => {
     const [activeTab, setActiveTab] = useState('for-you');
     const comicData = comics?.data;
     const genreData = genres;
-
+    console.log('====================================');
+    console.log(comics.data);
+    console.log('====================================');
     return (
         <DefaultLayout>
             <main className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-pink-50">
@@ -137,11 +142,11 @@ const Home: FC<{
                                             )}
                                             <span className="flex items-center">
                                                 <Heart className="mr-1 h-4 w-4 text-pink-500" />{' '}
-                                                {story.vote_count}K
+                                                {formatCount(story.vote_count)}
                                             </span>
                                             <span className="flex items-center">
                                                 <BookOpen className="mr-1 h-4 w-4 text-blue-500" />{' '}
-                                                {story.read_count}M
+                                                {formatCount(story.read_count)}
                                             </span>
                                         </div>
                                     </div>

@@ -15,7 +15,7 @@ class Comic extends Model
         'read_count',
         'vote_count',
         'status',
-        'author_id', 
+        'author_id',
     ];
 
     public function author()
@@ -44,7 +44,13 @@ class Comic extends Model
     }
 
     public function readHistories()
-{
-    return $this->hasMany(ReadHistory::class);
-}
+    {
+        return $this->hasMany(ReadHistory::class);
+    }
+
+    public function scopeWithChapterStats($query)
+    {
+        return $query->withSum('chapters', 'read_count')
+            ->withSum('chapters', 'vote_count');
+    }
 }
