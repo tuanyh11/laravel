@@ -99,4 +99,10 @@ class User extends Authenticatable implements FilamentUser
             ->where('chapter_id', $chapter->id)
             ->exists();
     }
+
+    // app/Models/Comic.php
+    public function readHistories()
+    {
+        return $this->hasMany(ReadHistory::class);
+    }
 }

@@ -11,15 +11,9 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
 }) => {
     const [isFollowing, setIsFollowing] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const [isVoted, setIsVoted] = useState(false);
-    const [voteCount, setVoteCount] = useState(12453);
 
     const toggleFollow = () => setIsFollowing(!isFollowing);
     const toggleBookmark = () => setIsBookmarked(!isBookmarked);
-    const toggleVote = () => {
-        setIsVoted(!isVoted);
-        setVoteCount((prev) => (isVoted ? prev - 1 : prev + 1));
-    };
 
     // Xử lý click vào chapter cần mở khóa
     const handleChapterClick = async (chapter) => {
@@ -67,6 +61,7 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
     };
 
     const readCount = comic.chapters.reduce((a, b) => a + b.read_count, 0);
+    const voteCount = comic.chapters.reduce((a, b) => a + b.vote_count, 0);
     const commentCount = comic.chapters.reduce(
         (a, b) => a + b.comments_count,
         0,
@@ -113,17 +108,12 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                 )}
                                 <div className="flex justify-between gap-3">
                                     <button
-                                        onClick={toggleVote}
-                                        className={`flex w-1/2 items-center justify-center rounded-full border py-2 shadow-sm transition-all duration-300 ${
-                                            isVoted
-                                                ? 'border-pink-400 bg-pink-50 text-pink-500'
-                                                : 'border-gray-300 hover:border-pink-400 hover:bg-pink-50 hover:text-pink-500'
-                                        }`}
+                                        className={`flex w-1/2 items-center justify-center rounded-full border py-2 shadow-sm transition-all duration-300 ${'border-pink-400 bg-pink-50 text-pink-500'}`}
                                     >
                                         <HeartIcon
-                                            className={`mr-2 h-5 w-5 ${isVoted ? 'fill-pink-500 text-pink-500' : 'text-gray-500'}`}
+                                            className={`mr-2 h-5 w-5 fill-pink-500 text-pink-500`}
                                         />{' '}
-                                        {voteCount.toLocaleString()}
+                                        {voteCount}
                                     </button>
                                     <button
                                         onClick={toggleBookmark}
@@ -250,9 +240,11 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                     {comic.chapters.map((chapter) => {
                                         // Kiểm tra xem chapter có phải trả phí không
                                         const isPaid = chapter.pricing > 0;
-                                        // Kiểm tra xem chapter đã được mở khóa chưa (nếu có thông tin)
+                                        // Kiểm tra xem chapter đã được mở khóa chưa
                                         const isUnlocked =
                                             chapter.is_unlocked === true;
+                                        // Kiểm tra xem chapter đã đọc chưa
+                                        const isRead = chapter.is_read === true;
 
                                         return (
                                             <div
@@ -260,7 +252,9 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                                 className={`flex cursor-pointer items-center justify-between border-b border-gray-200 p-4 transition-colors hover:bg-blue-50 ${
                                                     isPaid && !isUnlocked
                                                         ? 'bg-gray-50'
-                                                        : ''
+                                                        : isRead
+                                                          ? 'bg-blue-50'
+                                                          : ''
                                                 }`}
                                                 onClick={() =>
                                                     handleChapterClick(chapter)
@@ -273,44 +267,12 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                                             {chapter.order}:{' '}
                                                             {chapter.title}
                                                         </p>
-                                                        {isPaid && (
-                                                            <span className="ml-2 flex items-center rounded-full px-2 py-1 text-xs font-semibold shadow-sm">
-                                                                {isUnlocked ? (
-                                                                    <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-green-700">
-                                                                        <svg
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                            className="h-3 w-3"
-                                                                            viewBox="0 0 20 20"
-                                                                            fill="currentColor"
-                                                                        >
-                                                                            <path
-                                                                                fillRule="evenodd"
-                                                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                                                clipRule="evenodd"
-                                                                            />
-                                                                        </svg>
-                                                                        Đã mở
-                                                                    </span>
-                                                                ) : (
-                                                                    <span className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-blue-700">
-                                                                        <svg
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                            className="h-3 w-3"
-                                                                            viewBox="0 0 20 20"
-                                                                            fill="currentColor"
-                                                                        >
-                                                                            <path
-                                                                                fillRule="evenodd"
-                                                                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                                                                clipRule="evenodd"
-                                                                            />
-                                                                        </svg>
-                                                                        {chapter.pricing.toLocaleString()}{' '}
-                                                                        VND
-                                                                    </span>
-                                                                )}
+                                                        {isRead && (
+                                                            <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                                                                Đã đọc
                                                             </span>
                                                         )}
+                                                        {/* Hiển thị thông tin khóa/mở khóa */}
                                                     </div>
                                                     <p className="text-sm text-gray-500">
                                                         Cập nhật:{' '}
@@ -318,11 +280,6 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                                                             chapter.updated_at,
                                                         ).toLocaleDateString(
                                                             'vi-VN',
-                                                            {
-                                                                month: 'short',
-                                                                day: '2-digit',
-                                                                year: 'numeric',
-                                                            },
                                                         )}
                                                     </p>
                                                 </div>

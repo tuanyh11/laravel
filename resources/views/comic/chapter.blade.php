@@ -15,7 +15,11 @@
     <link rel="stylesheet" href="{{ asset('css/filament/filament/app.css')}}">
     <style>
         ._df_book {
-            background: linear-gradient(to right, #3b82f6, #ec4899)
+            background: linear-gradient(to right, #3b82f6, #ec4899);
+            height: 100vh;
+        }
+        body {
+            min-height: 100dvh;
         }
     </style>
 </head>

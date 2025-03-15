@@ -42,4 +42,9 @@ class Comic extends Model
     {
         return $this->belongsToMany(Genres::class, 'comic_genres');
     }
+
+    public function readHistories()
+{
+    return $this->hasMany(ReadHistory::class);
+}
 }
