@@ -1,6 +1,5 @@
 import { CommentsSidebar } from '@/Components/UI/CommentsSidebar';
 import FloatingButtons from '@/Components/UI/FloatingButtons';
-import PDFFlipbook from '@/Components/UI/PDFFlipbook';
 import useChapterComments from '@/hooks/useChapterComments';
 import useResizable from '@/hooks/useResizable';
 import { PageProps } from '@/types';
@@ -56,11 +55,6 @@ const ChapterDetail: FC = () => {
         <div ref={containerRef} className="relative flex h-[100dvh] w-full">
             <div
                 className={`transition-all ${showComments ? 'w-full' : 'w-full'}`}
-                // style={{
-                //     width: showComments
-                //         ? `calc(100% - ${sidebarWidth}px)`
-                //         : '100%',
-                // }}
             >
                 {!showComments && (
                     <FloatingButtons
@@ -71,7 +65,11 @@ const ChapterDetail: FC = () => {
                 )}
 
                 {/* Replace PDFViewer with PDFFlipbook */}
-                <PDFFlipbook fileUrl={chapter.media.url} />
+                {/* <PDFFlipbook fileUrl={chapter.media.url} /> */}
+                <iframe
+                    className="h-full w-full"
+                    src={`${window.location.href}/iframe`}
+                ></iframe>
             </div>
 
             {/* Resizer handle */}

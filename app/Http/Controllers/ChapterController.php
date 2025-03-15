@@ -17,9 +17,61 @@ class ChapterController extends Controller
         $this->paymentService = $paymentService;
     }
     
-    public function show($slug ,$chapter_id)
+    public function show($id,$chapter_id)
     {
         $chapter = Chapter::where('id', $chapter_id)
+            ->with('media')
+            ->firstOrFail();
+    
+        // Kiểm tra xem người dùng hiện tại đã vote chưa
+        $hasVoted = false;
+        
+        // Kiểm tra xem chapter có phải nội dung trả phí không
+        $isPaidContent = $chapter->isPaidContent();
+        
+        // Mặc định trạng thái là chưa mở khóa
+        $isUnlocked = false;
+        
+        if (Auth::check()) {
+            $user = Auth::user();
+            $hasVoted = $chapter->voters()->where('user_id', $user->id)->exists();
+            
+            // Nếu là nội dung trả phí, kiểm tra xem người dùng đã mua chưa
+            if ($isPaidContent) {
+                $isUnlocked = $chapter->isAccessibleBy($user);
+            }
+        }
+        
+        // Nếu chapter không phải nội dung trả phí, đánh dấu là đã mở khóa
+        if (!$isPaidContent) {
+            $isUnlocked = true;
+        }
+        
+        // Thêm thông tin đã vote và trạng thái mở khóa vào dữ liệu trả về
+        $chapter->has_voted = $hasVoted;
+        $chapter->is_paid_content = $isPaidContent;
+        $chapter->is_unlocked = $isUnlocked;
+        
+        // Tăng số lượt đọc nếu người dùng có quyền truy cập vào chapter
+        if ($isUnlocked) {
+            $chapter->increment('read_count');
+        }
+
+        // Nếu là nội dung trả phí và chưa được mở khóa, chuyển hướng đến trang mua chapter
+        if ($isPaidContent && !$isUnlocked) {
+            return Inertia::render('Comic/ChapterLocked', [
+                "chapter" => $chapter,
+                "walletBalance" => Auth::check() ? $this->paymentService->getWalletBalance(Auth::user()) : 0
+            ]);
+        }
+
+        return Inertia::render('Comic/Chapter', [
+            "chapter" => $chapter,
+        ]);
+    }
+
+    public function showIframe($id,$chapter_id) {
+         $chapter = Chapter::where('id', $chapter_id)
             ->with('media')
             ->firstOrFail();
     

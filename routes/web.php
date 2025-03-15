@@ -92,6 +92,8 @@ Route::middleware('auth')->group(function () {
     // Chapter routes with Inertia
     Route::get('/comic/{slug}/chapter/{chapter_id}', [ChapterController::class, 'show'])
         ->name('chapter.show');
+    Route::get('/comic/{slug}/chapter/{chapter_id}/iframe', [ChapterController::class, 'showIFrame'])
+        ->name('chapter.show.iframe');
 
     // Comment routes for Inertia
     Route::post('/chapter/{chapter_id}/comments', [CommentController::class, 'store'])
