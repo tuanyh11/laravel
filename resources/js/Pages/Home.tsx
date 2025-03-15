@@ -1,7 +1,14 @@
 import DefaultLayout from '@/Layouts/DefaultLayout';
 import { Comic, Genre, LaravelPagination } from '@/types/custom';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Heart, Star, TrendingUp } from 'lucide-react';
+import {
+    BookOpen,
+    ChevronLeft,
+    ChevronRight,
+    Heart,
+    Star,
+    TrendingUp,
+} from 'lucide-react';
 import { FC, useState } from 'react';
 
 const Home: FC<{
@@ -15,15 +22,26 @@ const Home: FC<{
     return (
         <DefaultLayout>
             <main className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-pink-50">
-                {/* Hero Section */}
-                <div className="mb-8 bg-gradient-to-r from-blue-500 to-pink-500 py-12 text-white">
-                    <div className="container mx-auto px-4">
+                {/* Hero Section - Improved with background image */}
+                <div className="relative mb-8 overflow-hidden">
+                    {/* Background Image with Overlay */}
+                    <div className="absolute inset-0 z-0">
+                        <img
+                            src="/storage/media/ce038394-d8d7-4d00-9438-0cdbab7c8aa4.jpeg"
+                            alt="Hero Background"
+                            className="h-full w-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-pink-900/80"></div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="container relative z-10 mx-auto px-4 py-16">
                         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-                            <div className="max-w-xl">
+                            <div className="max-w-xl text-white">
                                 <h1 className="mb-4 text-4xl font-bold md:text-5xl">
                                     Khám phá những câu chuyện tuyệt vời
                                 </h1>
-                                <p className="mb-6 text-lg">
+                                <p className="mb-6 text-lg opacity-90">
                                     Hàng ngàn câu chuyện thú vị đang chờ đón bạn
                                     - đọc, chia sẻ và kết nối với cộng đồng yêu
                                     thích truyện.
@@ -31,18 +49,17 @@ const Home: FC<{
                                 <div className="flex gap-4">
                                     <Link
                                         href="#featured"
-                                        className="rounded-full bg-white px-6 py-3 font-medium text-blue-600 transition-colors duration-300 hover:bg-blue-50"
+                                        className="rounded-full bg-white px-6 py-3 font-medium text-blue-600 shadow-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-blue-300/50"
                                     >
                                         Khám phá ngay
                                     </Link>
+                                    <Link
+                                        href="/genres"
+                                        className="rounded-full border border-white bg-transparent px-6 py-3 font-medium text-white transition-all duration-300 hover:bg-white/10"
+                                    >
+                                        Xem thể loại
+                                    </Link>
                                 </div>
-                            </div>
-                            <div className="w-full max-w-md">
-                                <img
-                                    src="/storage/media/ce038394-d8d7-4d00-9438-0cdbab7c8aa4.jpeg"
-                                    alt="Reading illustrations"
-                                    className="rounded-lg shadow-lg"
-                                />
                             </div>
                         </div>
                     </div>
@@ -131,6 +148,57 @@ const Home: FC<{
                                 </div>
                             </Link>
                         ))}
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="mt-12 flex items-center justify-center">
+                        <div className="flex items-center space-x-2">
+                            <Link
+                                href={
+                                    comics.prev_page_url
+                                        ? comics.prev_page_url.replace(
+                                              '/',
+                                              '/comic',
+                                          )
+                                        : '#'
+                                }
+                                className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                    comics.prev_page_url
+                                        ? 'bg-white text-blue-600 shadow hover:bg-blue-50'
+                                        : 'cursor-not-allowed bg-gray-100 text-gray-400'
+                                }`}
+                                preserveScroll
+                            >
+                                <ChevronLeft className="h-5 w-5" />
+                            </Link>
+
+                            {[...Array(comics.last_page)].map((_, index) => (
+                                <Link
+                                    key={index}
+                                    href={`/comic?page=${index + 1}`}
+                                    className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                        comics.current_page === index + 1
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-white text-blue-600 shadow hover:bg-blue-50'
+                                    }`}
+                                    preserveScroll
+                                >
+                                    {index + 1}
+                                </Link>
+                            ))}
+
+                            <Link
+                                href={comics.next_page_url || '#'}
+                                className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                                    comics.next_page_url
+                                        ? 'bg-white text-blue-600 shadow hover:bg-blue-50'
+                                        : 'cursor-not-allowed bg-gray-100 text-gray-400'
+                                }`}
+                                preserveScroll
+                            >
+                                <ChevronRight className="h-5 w-5" />
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </main>

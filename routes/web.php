@@ -65,12 +65,12 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/home', function () {
+Route::get('/comic', function () {
     $comics = Comic::with(['author' => function ($query) {
         $query->select('id', 'name');
     }])
         ->with('thumbnail')
-        ->paginate(10);
+        ->paginate(5);
     $genres = Genres::all();
 
     return Inertia::render('Home', [

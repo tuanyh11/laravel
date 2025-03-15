@@ -1,16 +1,23 @@
 <?php
-// routes/api.php
-use App\Http\Controllers\CommentController;
-use Illuminate\Support\Facades\Route;
 
-// Route::middleware('auth')->group(function () {
-//     // Chapter comments routes
-    Route::get('/chapter/{chapter_id}/comments', [CommentController::class, 'index'])->name('chapter.comment');
-    Route::post('/chapter/{chapter_id}/comments', [CommentController::class, 'store'])->name('chapter.comment.store');
-    
-    // Added routes for comment replies
-    Route::get('/comments/{comment_id}/replies', [CommentController::class, 'getReplies'])->name('comment.replies');
-    
-    // Generic comments endpoint for creating both comments and replies
-    Route::post('/comments', [CommentController::class, 'storeComment'])->name('comments.store');
-// });
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\ComicController;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
+|
+*/
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+// Comic search API endpoint
+Route::get('/comics/search', [ComicController::class, 'search']);
