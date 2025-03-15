@@ -91,7 +91,7 @@ const Home: FC<{
                     <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {comicData.map((story) => (
                             <Link
-                                href={`/comic/${story.slug}`}
+                                href={`/comic/${story.id}`}
                                 key={story.id}
                                 className="overflow-hidden rounded-xl bg-white pt-4 shadow-lg transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl"
                             >

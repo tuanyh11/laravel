@@ -101,7 +101,7 @@ const Detail: FC<{ comic: Comic; walletBalance?: number }> = ({
                             <div className="mt-6 space-y-3">
                                 {comic.chapters[0] ? (
                                     <Link
-                                        href={`/comic/${comic.slug}/chapter/${comic.chapters[0]?.id}`}
+                                        href={`/comic/${comic.id}/chapter/${comic.chapters[0]?.id}`}
                                         className="block w-full transform rounded-full bg-gradient-to-r from-blue-500 to-pink-500 py-3 text-center font-bold text-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                                     >
                                         Bắt đầu đọc

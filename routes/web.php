@@ -87,7 +87,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/comic/{slug}', [ComicController::class, 'show'])->name('comic.show');
+    Route::get('/comic/{id}', [ComicController::class, 'show'])->name('comic.show');
 
     // Chapter routes with Inertia
     Route::get('/comic/{slug}/chapter/{chapter_id}', [ChapterController::class, 'show'])

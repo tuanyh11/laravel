@@ -32,6 +32,10 @@ class PaymentService
             
             $balanceBefore = $wallet->balance;
             $balanceAfter = $balanceBefore + $amount;
+
+            if($wallet->currency) {
+                
+            }
             
             // Update wallet balance
             $wallet->balance = $balanceAfter;

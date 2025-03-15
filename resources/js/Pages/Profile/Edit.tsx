@@ -6,12 +6,12 @@ import {
     CheckCircle,
     Eye,
     EyeOff,
+    Home,
     Lock,
     Mail,
     Save,
     User,
     X,
-    Home
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

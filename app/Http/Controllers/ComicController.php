@@ -17,9 +17,10 @@ class ComicController extends Controller
         $this->paymentService = $paymentService;
     }
     
-    public function show($slug)
+    public function show($id)
     {
-        $comic = ModelsComic::where('slug', $slug)
+        info($id);
+        $comic = ModelsComic::where('id', $id)
             ->with(['author' => function ($query) {
                 $query->select('id', 'name');
             }])
@@ -29,7 +30,6 @@ class ComicController extends Controller
             ->with('thumbnail')
             ->with('tags')
             ->firstOrFail();
-        info($comic);
         // Lấy số dư ví của người dùng
         $walletBalance = 0;
         $user = Auth::user();
