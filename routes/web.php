@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\CommentController as APICommentController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ComicController; // Ensure this class exists in the specified namespace
 use App\Http\Controllers\ChapterController;
@@ -152,5 +153,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chapters/{chapter_id}/purchase', [ChapterController::class, 'purchaseWithWallet'])
     ->name('chapters.purchase-with-wallet');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+});
+
 
 require __DIR__ . '/auth.php';

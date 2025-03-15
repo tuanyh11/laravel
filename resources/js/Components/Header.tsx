@@ -20,6 +20,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import Avatar from './UI/Avatar';
+import NotificationsDropdown from './UI/NotificationsDropdown';
 
 const Header = () => {
     const { auth, wallet } = usePage().props;
@@ -101,6 +102,17 @@ const Header = () => {
                 clearTimeout(searchTimeoutRef.current);
             }
         };
+    }, []);
+
+    // Request browser notification permission on component mount
+    useEffect(() => {
+        if (
+            Notification &&
+            Notification.permission !== 'granted' &&
+            Notification.permission !== 'denied'
+        ) {
+            Notification.requestPermission();
+        }
     }, []);
 
     // Perform search API call
@@ -304,9 +316,6 @@ const Header = () => {
                         </div>
                     </div>
 
-                    {/* Rest of component remains the same */}
-                    {/* ... */}
-
                     {/* Search icon for mobile */}
                     <button
                         onClick={() => setIsSearchOpen(true)}
@@ -370,10 +379,10 @@ const Header = () => {
                                 )}
                             </div>
 
-                            {/* Notifications - Show on tablet/desktop */}
-                            <button className="hidden text-white transition-colors hover:text-blue-100 sm:block">
-                                <Bell className="h-6 w-6" />
-                            </button>
+                            {/* Notifications - Replace with NotificationsDropdown component */}
+                            <div className="hidden sm:block">
+                                <NotificationsDropdown userId={user.id} />
+                            </div>
 
                             {/* User Menu */}
                             <div className="relative" ref={dropdownRef}>
@@ -403,13 +412,13 @@ const Header = () => {
                                                 <Inbox className="mr-3 h-5 w-5" />{' '}
                                                 Tin nhắn
                                             </a>
-                                            <a
-                                                href="#"
+                                            <Link
+                                                href="/notifications"
                                                 className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-pink-600"
                                             >
                                                 <Bell className="mr-3 h-5 w-5" />{' '}
                                                 Thông báo
-                                            </a>
+                                            </Link>
                                             <a
                                                 href="#"
                                                 className="flex items-center px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
@@ -526,16 +535,26 @@ const Header = () => {
                             Viết
                         </a>
                         {user && (
-                            <Link
-                                href={route('wallet.index')}
-                                className="flex items-center py-2 text-blue-700 transition-colors hover:text-pink-600"
-                            >
-                                <Wallet className="mr-2 h-5 w-5" />
-                                <span>
-                                    {wallet?.balance || '0.00'}{' '}
-                                    {wallet.currency}
-                                </span>
-                            </Link>
+                            <>
+                                <Link
+                                    href={route('wallet.index')}
+                                    className="flex items-center py-2 text-blue-700 transition-colors hover:text-pink-600"
+                                >
+                                    <Wallet className="mr-2 h-5 w-5" />
+                                    <span>
+                                        {wallet?.balance || '0.00'}{' '}
+                                        {wallet.currency}
+                                    </span>
+                                </Link>
+                                {/* Add notifications menu item for mobile */}
+                                <Link
+                                    href="/notifications"
+                                    className="flex items-center py-2 text-blue-700 transition-colors hover:text-pink-600"
+                                >
+                                    <Bell className="mr-2 h-5 w-5" />
+                                    <span>Thông báo</span>
+                                </Link>
+                            </>
                         )}
                     </nav>
                 </div>

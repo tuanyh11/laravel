@@ -105,3 +105,13 @@ export interface Transaction {
 }
 
 export type TransactionType = 'deposit' | 'withdrawal' | 'purchase';
+
+// Add this to resources/js/types/custom.ts
+
+// export interface Notification {
+//     id: string;
+//     type: string;
+//     read_at: string | null;
+//     data: any;
+//     created_at: string;
+// }

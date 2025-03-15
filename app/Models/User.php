@@ -106,4 +106,10 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(ReadHistory::class);
     }
+
+    public function notifications()
+{
+    return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')
+                ->orderBy('created_at', 'desc');
+}
 }

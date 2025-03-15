@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\Comment;
-use App\Notifications\CommentReplyNotification;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -27,13 +26,9 @@ class CommentEvent implements ShouldBroadcastNow
     {
         $this->comment = $comment;
         $this->action = $action;
-        info($action);
-        if ($action === 'reply' && $comment->parent_id) {
-            $originalComment = Comment::find($comment->parent_id);
-            if ($originalComment) {
-                $originalComment->user->notify(new CommentReplyNotification($comment));
-            }
-        }
+        
+        // Remove the notification logic from here as it's now in the controller
+        // This avoids sending duplicate notifications
     }
 
     /**
@@ -43,15 +38,18 @@ class CommentEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        info("reply");
-
         if ($this->action === 'reply' && $this->comment->parent_id) {
             // Broadcast to the user who made the original comment
-            $originalCommentUserId = Comment::find($this->comment->parent_id)->user_id;
-            return [
-                new PrivateChannel('user.' . $originalCommentUserId),
-            ];
+            $originalComment = Comment::find($this->comment->parent_id);
+            
+            if ($originalComment) {
+                $originalCommentUserId = $originalComment->user_id;
+                return [
+                    new PrivateChannel('user.' . $originalCommentUserId),
+                ];
+            }
         }
+        
         // For new main comments, broadcast to the channel for that chapter
         return [
             new PrivateChannel('chapter.' . $this->comment->chapter_id),
